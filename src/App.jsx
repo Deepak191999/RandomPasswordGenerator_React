@@ -1,15 +1,15 @@
-import { useState, useCallback, useEffect ,useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
-function App() {
+function MyApp() {
   const [length, setLength] = useState(8);
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
 
-  const passwordRef= useRef(null)
+  const passwordRef = useRef(null);
 
-  const passwordGenerator = useCallback(() => {
+  const passwordGenerator = () => {
     let pass = "";
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     if (numberAllowed) {
@@ -25,21 +25,16 @@ function App() {
     }
 
     setPassword(pass);
-  }, [length, numberAllowed, charAllowed]); //'setPassword' bs optimisation ke liye dala na ,need nhi thi
+  };
 
-  const copyPassWordToClipBoard= useCallback(()=>{
-    passwordRef.current?.select()  // yha hum jo pasword hai usko select all kra hai 'passwordRef' ko use krke , iske bina bhi code copy ho rh tha ,bs show nhi hoga ki kya copy hua hai
-    // passwordRef.current?.setSelectionRange(0,4) // specific range select ho rh h
-    window.navigator.clipboard.writeText(password)   //copy kra hai
-  },[password])
+  const copyPassWordToClipBoard = () => {
+    passwordRef.current?.select();
+    window.navigator.clipboard.writeText(password);
+  };
 
-
-  // passwordGenerator()  aise call nhi krskte isliye useeffect use kra
-
-  //call the function  passwordGenerator(), jo item niche [] me hai uska mtlb hai in sb ke change me func run hoga
   useEffect(() => {
     passwordGenerator();
-  }, [length, numberAllowed, charAllowed, passwordGenerator]);  // arr ka ismese koi bhi elemen tme change hua to ye useeffect run ho jayega
+  }, [length, numberAllowed, charAllowed]);
 
   return (
     <>
@@ -55,10 +50,12 @@ function App() {
             className="py-1 px-3 w-full outline-none"
             placeholder="Password"
             readOnly
-            ref={passwordRef} // yha se ref liya 'line 10' se ab baat kr pa rh h, jo select hoga code uske liye ,ikha hai
+            ref={passwordRef}
           />
           <button
-          onClick={copyPassWordToClipBoard} className="bg-blue-700 active:bg-blue-950 text-white px-4 py-1 outline-none  shrink-0 hover: cursor-pointer ">
+            onClick={copyPassWordToClipBoard}
+            className="bg-blue-700 active:bg-blue-950 text-white px-4 py-1 outline-none  shrink-0 hover: cursor-pointer "
+          >
             Copy
           </button>
         </div>
@@ -104,4 +101,4 @@ function App() {
   );
 }
 
-export default App;
+export default MyApp;
